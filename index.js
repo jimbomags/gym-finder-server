@@ -1,9 +1,18 @@
 const express = require('express');
+const https = require('https');
 const cors = require('cors');
 const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 4001;
+
+https.createServer({
+  key: fs.readFileSync('server.key'),
+  cert: fs.readFileSync('server.cert'),
+}, app).listen(PORT, () => {
+  console.log(`Listening on port ${PORT}`);
+});
+
 app.use(cors());
 
 app.get('/', (req, res) => {
@@ -13,7 +22,7 @@ app.get('/', (req, res) => {
   });
   res.json(JSON.parse(gymData));
 });
-app.listen(PORT, () => console.log(`Listening on ${PORT}`));
+// app.listen(PORT, () => console.log(`Listening on ${PORT}`));
 
 
 const addGym = (company, location, street, postcode) => {
